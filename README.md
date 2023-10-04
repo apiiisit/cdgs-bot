@@ -1,0 +1,2 @@
+# cdgs-bot
+Bot discord
