@@ -2,7 +2,9 @@ import { Client, Collection, GatewayIntentBits } from "discord.js";
 import "dotenv/config";
 import { readdirSync } from "node:fs";
 
-export const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+export const client = new Client({
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
+});
 
 client.commands = new Collection();
 export const commands = [];
