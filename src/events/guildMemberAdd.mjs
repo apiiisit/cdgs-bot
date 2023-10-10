@@ -1,10 +1,11 @@
 import { Events } from "discord.js";
 import { client } from "../utils/controller.mjs";
 import { JsonDB } from "../utils/db.mjs";
-const jsonDB = new JsonDB();
+let jsonDB;
 
 client.on(Events.GuildMemberAdd, async (member) => {
   const guild = member.guild;
+  jsonDB = new JsonDB(guild.id);
 
   const roleRes = jsonDB.findById("roles", { id: guild.id });
   if (!roleRes) return;

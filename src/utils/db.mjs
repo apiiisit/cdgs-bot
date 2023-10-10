@@ -1,13 +1,19 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 
-const pathDB = "./src/data/db.json";
-if (!existsSync("./src/data")) mkdirSync("./src/data");
-if (!existsSync(pathDB))
-  writeFileSync(pathDB, JSON.stringify({ roles: [] }), "utf-8");
-
-const db = JSON.parse(readFileSync(pathDB, "utf-8"));
-
 export class JsonDB {
+  #pathDB;
+  #db;
+
+  constructor(guildId) {
+    this.#pathDB = `./src/data/${guildId}.json`;
+
+    if (!existsSync("./src/data")) mkdirSync("./src/data");
+    if (!existsSync(this.#pathDB))
+      writeFileSync(this.#pathDB, JSON.stringify({ roles: [] }), "utf-8");
+
+    this.#db = JSON.parse(readFileSync(this.#pathDB, "utf-8"));
+  }
+
   findAll(table) {
     return this.#findTable(table);
   }
@@ -35,8 +41,8 @@ export class JsonDB {
       return { error: true, result: "พบข้อมูลซ้ำซ้อน" };
 
     data.push(payload);
-    db[table] = data;
-    writeFileSync(pathDB, JSON.stringify(db), "utf-8");
+    this.#db[table] = data;
+    writeFileSync(this.#pathDB, JSON.stringify(this.#db), "utf-8");
     return { error: false, result: "เพิ่มข้อมูลเรียบร้อย" };
   }
 
@@ -51,8 +57,8 @@ export class JsonDB {
     if (index === -1) return { error: true, result: "ไม่พบข้อมูล" };
 
     data[index] = payload;
-    db[table] = data;
-    writeFileSync(pathDB, JSON.stringify(db), "utf-8");
+    this.#db[table] = data;
+    writeFileSync(this.#pathDB, JSON.stringify(this.#db), "utf-8");
     return { error: false, result: "แก้ไขข้อมูลเรียบร้อย" };
   }
 
@@ -67,15 +73,15 @@ export class JsonDB {
     if (index === -1) return { error: true, result: "ไม่พบข้อมูล" };
 
     data.splice(index, 1);
-    db[table] = data;
-    writeFileSync(pathDB, JSON.stringify(db), "utf-8");
+    this.#db[table] = data;
+    writeFileSync(this.#pathDB, JSON.stringify(this.#db), "utf-8");
     return { error: false, result: "ลบข้อมูลเรียบร้อย" };
   }
 
   #findTable(table) {
     return {
-      error: !db[table],
-      result: db[table] ?? `ไม่พบ Table`,
+      error: !this.#db[table],
+      result: this.#db[table] ?? `ไม่พบ Table`,
     };
   }
 

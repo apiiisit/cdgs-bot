@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "discord.js";
 import { JsonDB } from "../utils/db.mjs";
-const jsonDB = new JsonDB();
+let jsonDB;
 
 export const data = new SlashCommandBuilder()
   .setName("show")
@@ -15,6 +15,8 @@ export const data = new SlashCommandBuilder()
   );
 
 export const execute = async (interaction) => {
+  jsonDB = new JsonDB(interaction.guild.id);
+
   selectGroup(interaction, interaction.options.getSubcommandGroup());
 };
 
